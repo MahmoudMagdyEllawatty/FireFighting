@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">FireFighter</string>
+    <string name="pick_image_intent_text">Pick Image</string>
+    <string name="departments">Departments</string>
+    <string name="submit">Submit</string>
+    <string name="add_department">Add Department</string>
+    <string name="required">Required</string>
+    <string name="name">Name</string>
+    <string name="user_name">User Name</string>
+    <string name="phone">Phone</string>
+    <string name="password">Password</string>
+    <string name="no_result_found">No Data Found</string>
+    <string name="email">Email</string>
+    <string name="continue_as_user">Continue as User</string>
+    <string name="address">Address</string>
+    <string name="notes">Notes</string>
+    <string name="mapbox_access_token">sk.eyJ1IjoiYWJvYWxpNzEyIiwiYSI6ImNrNzI3eGdwMzA1MTkzZ21zdGdseTNneXMifQ.sp5n2Kl7JHPW9pGS-9kkzQ</string>
+    <string name="user_location_permission_explanation">This app needs location permissions to show its functionality.</string>
+    <string name="user_location_permission_not_granted">You didn\'t grant location permissions.</string>
+    <string name="msg">Your Message</string>
+    <string name="new_reports">New Reports</string>
+    <string name="finished_reports">Finished Reports</string>
+    <string name="complaints">Complaints</string>
+</resources>
