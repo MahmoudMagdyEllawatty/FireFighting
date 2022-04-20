@@ -1,21 +1,34 @@
 package com.app.firefighter.activities.user;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.app.firefighter.R;
 import com.app.firefighter.callback.AccidentCallback;
+import com.app.firefighter.callback.FileUploadCallback;
 import com.app.firefighter.controller.AccidentController;
+import com.app.firefighter.controller.ImageController;
+import com.app.firefighter.helper.ImagePicker;
+import com.app.firefighter.helper.LoadingHelper;
 import com.app.firefighter.helper.PermissionCheck;
 import com.app.firefighter.helper.SharedData;
 import com.app.firefighter.model.Accident;
@@ -71,12 +84,18 @@ public class UserAddReportActivity extends AppCompatActivity implements OnMapRea
     EditText address,notes;
     ImageView send;
 
+    private static final int RESULT_LOAD_IMAGES = 25;
+    String imageURL = "";
+    LoadingHelper loadingHelper;
+    ImageButton selectImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_user_add_report);
 
+        loadingHelper = new LoadingHelper(this);
         PermissionCheck.initialPermissionCheckAll(this,this);
 
         mapView = findViewById(R.id.mapView);
@@ -91,6 +110,17 @@ public class UserAddReportActivity extends AppCompatActivity implements OnMapRea
         address = findViewById(R.id.address);
         notes = findViewById(R.id.notes);
         send = findViewById(R.id.send);
+        selectImage = findViewById(R.id.select_image);
+
+        selectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(checkReadPermission()){
+                    pickDoc();
+                }
+            }
+        });
+
 
 
         send.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +155,8 @@ public class UserAddReportActivity extends AppCompatActivity implements OnMapRea
                 accident.setState(0);
                 accident.setUserName(SharedData.currentPhone);
                 accident.setLocation(originPoint.longitude()+","+originPoint.latitude());
+                accident.setImageURL(imageURL);
+
 
 
                 new AccidentController().Save(accident, new AccidentCallback() {
@@ -149,6 +181,55 @@ public class UserAddReportActivity extends AppCompatActivity implements OnMapRea
 
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    private boolean checkReadPermission(){
+        int permissionWriteExternal = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permissionWriteExternal != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE},2);
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+
+    private void pickDoc(){
+        Intent chooseImageIntent = ImagePicker.getPickImageIntent(this);
+        startActivityForResult(chooseImageIntent, RESULT_LOAD_IMAGES);
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGES && resultCode == Activity.RESULT_OK) {
+
+
+            loadingHelper.showLoading("Uploading Image");
+            Uri uri = ImagePicker.getUriFromResult(this, resultCode, data);;
+            if(uri == null){
+                Toast.makeText(this, "Cannot load image", Toast.LENGTH_SHORT).show();
+            }else{
+                new ImageController().uploadImage(uri, new FileUploadCallback() {
+                    @Override
+                    public void onSuccess(String url) {
+                        imageURL = url;
+                        loadingHelper.dismissLoading();
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        loadingHelper.dismissLoading();
+                    }
+                });
+            }
+
+        }
+    }
 
     @Override
     public void onMapReady(@NonNull final MapboxMap mapboxMap) {
@@ -161,8 +242,11 @@ public class UserAddReportActivity extends AppCompatActivity implements OnMapRea
 
                 addDestinationIconSymbolLayer(style);
 
-                originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
-                        locationComponent.getLastKnownLocation().getLatitude());
+                if(locationComponent.getLastKnownLocation() != null){
+                    originPoint = Point.fromLngLat(locationComponent.getLastKnownLocation().getLongitude(),
+                            locationComponent.getLastKnownLocation().getLatitude());
+
+                }
 
             }
         });
@@ -282,10 +366,14 @@ public class UserAddReportActivity extends AppCompatActivity implements OnMapRea
                 }
                 return;
             }
-
-
             // other 'case' lines to check for other
             // permissions this app might request
+        }
+
+        if(requestCode == 2){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                pickDoc();
+            }
         }
         permissionsManager.onRequestPermissionsResult(requestCode, permissions, grantResults);
 

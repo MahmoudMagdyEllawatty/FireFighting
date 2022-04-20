@@ -8,12 +8,13 @@ public class Accident {
     private String userName;
     private int state;
     private Department department;
+    private String imageURL;
 
 
     public Accident() {
     }
 
-    public Accident(String key, String address, String location, String notes, String userName, int state, Department department) {
+    public Accident(String key, String address, String location, String notes, String userName, int state, Department department, String imageURL) {
         this.key = key;
         this.address = address;
         this.location = location;
@@ -21,6 +22,15 @@ public class Accident {
         this.userName = userName;
         this.state = state;
         this.department = department;
+        this.imageURL = imageURL;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 
     public Department getDepartment() {

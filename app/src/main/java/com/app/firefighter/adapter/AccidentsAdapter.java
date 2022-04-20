@@ -24,6 +24,7 @@ import com.app.firefighter.controller.AccidentController;
 import com.app.firefighter.helper.LoadingHelper;
 import com.app.firefighter.helper.SharedData;
 import com.app.firefighter.model.Accident;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -56,14 +57,83 @@ public class AccidentsAdapter extends RecyclerView.Adapter<AccidentsAdapter.View
         holder.address.setText(Accident.getAddress());
 
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedData.accident = Accident;
-                Intent intent = new Intent(context, AccidentDetailsActivity.class);
-                context.startActivity(intent);
+        if(SharedData.loggedDepartment == null){
+
+        }else{
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SharedData.accident = Accident;
+                    Intent intent = new Intent(context, AccidentDetailsActivity.class);
+                    context.startActivity(intent);
+                }
+            });
+
+            holder.image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SharedData.accident = Accident;
+                    Intent intent = new Intent(context, AccidentDetailsActivity.class);
+                    context.startActivity(intent);
+                }
+            });
+
+        }
+
+        
+        if(SharedData.loggedDepartment != null){
+            holder.img_delete.setVisibility(View.GONE);
+        }else{
+            
+            if(Accident.getState() == 1){
+                holder.img_delete.setVisibility(View.GONE);
+            }else{
+                holder.img_delete.setVisibility(View.VISIBLE);    
             }
-        });
+            
+            holder.img_delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    new LoadingHelper(context)
+                    .showDialog("Delete Report", "Are you sure?", "Delete", "Cancel",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    new AccidentController().delete(Accident, new AccidentCallback() {
+                                        @Override
+                                        public void onSuccess(ArrayList<com.app.firefighter.model.Accident> complaints) {
+                                            Toast.makeText(context, "Deleted!!", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onFail(String msg) {
+
+                                        }
+                                    });
+                                }
+                            }, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    
+                                }
+                            });        
+                }
+            });
+            
+        }
+
+
+        if(Accident.getImageURL() == null){
+            holder.image.setVisibility(View.GONE);
+        }else{
+            if(Accident.getImageURL().equals("")){
+                holder.image.setVisibility(View.GONE);
+            }else{
+                Picasso.get()
+                        .load(Accident.getImageURL())
+                        .into(holder.image);
+            }
+        }
 
     }
     @Override
@@ -74,9 +144,12 @@ public class AccidentsAdapter extends RecyclerView.Adapter<AccidentsAdapter.View
     class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView title,address,department,notes;
+        ImageView image,img_delete;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            img_delete = itemView.findViewById(R.id.img_delete);
+            image = itemView.findViewById(R.id.image);
             title = itemView.findViewById(R.id.user_name);
             address = itemView.findViewById(R.id.address);
             department = itemView.findViewById(R.id.department);

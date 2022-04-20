@@ -55,6 +55,49 @@
         tools:ignore="RtlSymmetry" />
 
 
+    <RelativeLayout
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:background="@mipmap/bar"
+            android:hint="@string/add_photo"
+            android:paddingStart="32dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="32dp"
+            android:paddingBottom="16dp"
+            android:minHeight="55dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:layout_centerVertical="true"
+            android:id="@+id/select_image"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:paddingBottom="16dp"
+            android:minHeight="60dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_image"
+            android:background="@drawable/actionbar_gradient"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    </RelativeLayout>
+
+
     <ImageView
         android:layout_gravity="center"
         android:id="@+id/send"

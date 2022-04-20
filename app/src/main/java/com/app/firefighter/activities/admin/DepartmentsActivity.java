@@ -92,6 +92,7 @@ public class DepartmentsActivity extends AppCompatActivity {
 
         final EditText etxtTitle = dialogView.findViewById(R.id.etxt_title);
         final EditText etxtPhone = dialogView.findViewById(R.id.etxt_phone);
+        final EditText etxtEmail = dialogView.findViewById(R.id.etxt_email);
         final EditText etxtUserName = dialogView.findViewById(R.id.etxt_user_name);
         final EditText etxtPassword = dialogView.findViewById(R.id.etxt_password);
 
@@ -139,12 +140,22 @@ public class DepartmentsActivity extends AppCompatActivity {
             }
 
 
+            if(etxtEmail.getText() == null){
+                etxtEmail.setError(getString(R.string.required));
+                return;
+            }else if(etxtEmail.getText().toString().equals("")){
+                etxtEmail.setError(getString(R.string.required));
+                return;
+            }
+
+
             Department department = new Department();
             department.setKey("");
             department.setName(etxtTitle.getText().toString());
             department.setPassword(etxtPassword.getText().toString());
             department.setPhone(etxtPhone.getText().toString());
             department.setUserName(etxtUserName.getText().toString());
+            department.setEmail(etxtEmail.getText().toString());
 
 
             new DepartmentController()

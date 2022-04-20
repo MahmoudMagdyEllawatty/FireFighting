@@ -1,8 +1,11 @@
 package com.app.firefighter.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -68,7 +71,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
 
-                if(email.getText().toString().equals("admin@fire.com") && password.getText().toString().equals("123456")){
+                if(email.getText().toString().equals("admin@fire.com") &&
+                        password.getText().toString().equals("123456")){
                     Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -79,7 +83,8 @@ public class LoginActivity extends AppCompatActivity {
                             Department department = new Department();
                             department.setKey("Not Exist");
                             for (Department department1 : complaints){
-                                if(department1.getUserName().equals(email.getText().toString()) &&
+                                if( ( department1.getUserName().equals(email.getText().toString()) ||
+                                        department1.getEmail().equals(email.getText().toString()))&&
                                         department1.getPassword().equals(password.getText().toString())){
                                     department = department1;
                                     break;
@@ -106,5 +111,39 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+            int res = checkSelfPermission(android.Manifest.permission.READ_PHONE_STATE);
+            if (res != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.READ_PHONE_STATE}
+                        , 123);
+            }
+
+        }
+    }
+
+    private final static int REQUEST_CODE_ASK_PERMISSIONS = 123;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), "READ_PHONE_STATE Denied", Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                }
+
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

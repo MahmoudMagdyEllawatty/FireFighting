@@ -100,12 +100,14 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.Vi
         final EditText etxtPhone = dialogView.findViewById(R.id.etxt_phone);
         final EditText etxtUserName = dialogView.findViewById(R.id.etxt_user_name);
         final EditText etxtPassword = dialogView.findViewById(R.id.etxt_password);
+        final EditText etxtEmail = dialogView.findViewById(R.id.etxt_email);
         final TextView title = dialogView.findViewById(R.id.title);
 
         etxtTitle.setText(Department.getName());
         etxtPassword.setText(Department.getPassword());
         etxtPhone.setText(Department.getPhone());
         etxtUserName.setText(Department.getUserName());
+        etxtEmail.setText(Department.getEmail() == null ? "" : Department.getEmail());
 
         title.setText("Update "+Department.getName());
 
@@ -148,12 +150,22 @@ public class DepartmentAdapter extends RecyclerView.Adapter<DepartmentAdapter.Vi
             }
 
 
+            if(etxtEmail.getText() == null){
+                etxtEmail.setError(context.getString(R.string.required));
+                return;
+            }else if(etxtEmail.getText().toString().equals("")){
+                etxtEmail.setError(context.getString(R.string.required));
+                return;
+            }
+
+
 
 
             Department.setName(etxtTitle.getText().toString());
             Department.setPassword(etxtPassword.getText().toString());
             Department.setPhone(etxtPhone.getText().toString());
             Department.setUserName(etxtUserName.getText().toString());
+            Department.setEmail(etxtEmail.getText().toString());
 
             new DepartmentController()
                     .Save(Department, new DepartmentCallback() {

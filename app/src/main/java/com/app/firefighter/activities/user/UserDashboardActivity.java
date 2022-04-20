@@ -19,6 +19,16 @@ public class UserDashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_dashboard);
 
 
+        (findViewById(R.id.reports))
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(UserDashboardActivity.this,
+                                MyReportsActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
         (findViewById(R.id.complaints))
                 .setOnClickListener(new View.OnClickListener() {
                     @Override

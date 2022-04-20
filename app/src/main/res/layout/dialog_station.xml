@@ -134,6 +134,35 @@
                     android:layout_marginStart="10dp"
                     android:textSize="16sp"
                     android:textColor="@color/black"
+                    android:text="@string/email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/etxt_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/round_border"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    android:padding="16dp"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:textColor="@color/purple_500"
+                    android:textSize="16sp" />
+
+
+
+                <TextView
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
                     android:text="@string/phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

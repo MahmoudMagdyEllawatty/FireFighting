@@ -46,7 +46,7 @@ public class ImagePicker {
         pickIntent.putExtra("return-data", true);
         takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                 FileProvider.getUriForFile(context,
-                        "com.app.myplant.provider",
+                        "com.app.firefighter.provider",
                         getTempFile(context))
         );
 
